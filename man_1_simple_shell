@@ -1,0 +1,22 @@
+.Dd 12/1/2021       
+.Dt Shell 3     
+.Os Ubuntu
+.Sh Simple Shell           
+.Nm Shell,
+
+.Nm shs \- our version of a simple shell,
+.Sh Synopsis
+.Nd ./hsh creates a terminal to enter a command
+.Sh DESCRIPTION          
+hsh is the {Happy|Human|History} shell, a command-line driven user interface to your system
+.Nm
+.Sh Compilation
+Your shell will be compiled this way:
+
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+.Sh Commands
+.Nd cd - Change Directory to home directory
+
+.Nd env - display all available enviroment variables
+
+.Nd exit - exit terminal
