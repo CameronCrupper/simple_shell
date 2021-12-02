@@ -1,52 +1,93 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "main.h"
 /**
-*main - test shell
-*@ac: command line arguments
-*@av: pointer to a pointer for amount of cmd line arguments
-*Return: nothing else
+* main - cointinously reads, executes function and then prints
+* @ac: argument count
+* @av: argument value
+* Return: 0
 */
-int main(int ac, char **av)
+
+int main(int ac __attribute__((unused)), char **av __attribute__((unused)))
 {
-	size_t bufsize = 2097152;
-	char size;
-	char **toks = malloc(sizeof(char) * size);
-	char **args;
-	int token, buffer, delimiter, counter;
-
-	if (str == NULL)
-		free(str), free_list(HEAD), exit(-2);
-	while (int_mode)
+	char *val;
+	while (1)
 	{
-		int_mode = isatty(STDIN_FILENO);
+    fprintf(stderr, "$ ");
+		 val = read_val();
 
-			if (int_mode == 1)
-			{
-				write(STDOUT_FILENO, "~$", 13);
-			}
+        if(!val)
+        {
+            exit(EXIT_SUCCESS);
+        }
+
+        if(val[0] == '\0' || strcmp(val, "\n") == 0)
+        {
+            free(val);
+          
+        }
+
+        if(strcmp(val, "exit\n") == 0)
+        {
+            free(val);
+            break;
+        }
+
+        printf("%s\n", val);
+
+        free(val);
 	}
-	token = strtok(buffer, delimiter);
 
-	while (token != NULL)
-	{
-		toks[counter] = strdup(token);
-		token = strtok(NULL, delimiter);
-		counter++;
-	}
-	toks[counter] = token;
+}
 
-	if(!pid)
-	{
-		if (execve(args[0], args, NULL) == -1)
-		{
-			handle_errors();
-		}
-	else
-	{
-		wait();
-	}
-	} 
-	return (0);
+char *read_val(void)
+{
+    char buf[1024];
+    char *ptr = NULL;
+    char ptrlen = 0;
+
+    while(fgets(buf, 1024, stdin))
+    {
+        int buflen = strlen(buf);
+
+        if(!ptr)
+        {
+            ptr = malloc(buflen+1);
+        }
+        else
+        {
+            char *ptr2 = realloc(ptr, ptrlen+buflen+1);
+
+            if(ptr2)
+            {
+                ptr = ptr2;
+            }
+            else
+            {
+                free(ptr);
+                ptr = NULL;
+            }
+        }
+if(!ptr)
+        {
+            fprintf(stderr, "error: failed to alloc buffer: %s\n", strerror(errno));
+            return NULL;
+        }
+
+        strcpy(ptr+ptrlen, buf);
+
+        if(buf[buflen-1] == '\n')
+        {
+            if(buflen == 1 || buf[buflen-2] != '\\')
+            {
+                return ptr;
+            }
+
+            ptr[ptrlen+buflen-2] = '\0';
+            buflen -= 2;
+            fprintf(stderr, "> ");
+        }
+
+        ptrlen += buflen;
+    }
+
+    return ptr;
 }
